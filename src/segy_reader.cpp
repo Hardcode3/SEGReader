@@ -1,22 +1,6 @@
 #include <segy_reader.hpp>
 
-void SegyFileReader::read_file() {
-    std::ifstream file(filename_, std::ios::binary);
-    if (!file) {
-        std::cerr << "Error opening file: " << filename_ << std::endl;
-        return;
-    }
-    
-    read_textual_header(file);
-    read_ebcdic_header(file);
-    read_binary_header(file);
-    read_trace_headers(file);
-    read_data(file);
-
-    file.close();
-}
-
-std::string SegyFileReader::read_ascii_data(const std::string& filepath, int begin_byte, int end_byte, bool big_endian)
+std::string read_ascii_data(const std::string& filepath, int begin_byte, int end_byte, bool big_endian)
 {
     // ASCII (American Standard Code for Information Interchange) is a character encoding scheme
     // Each character is represented by a 7-bit binary value, allowing a total of 128 unique characters to be encoded
@@ -61,6 +45,28 @@ std::string SegyFileReader::read_ascii_data(const std::string& filepath, int beg
     file.close();
 
     return ascii_data;
+}
+
+
+
+
+//////////////////
+/// SEGY CLASS ///
+//////////////////
+void SegyFileReader::read_file() {
+    std::ifstream file(filename_, std::ios::binary);
+    if (!file) {
+        std::cerr << "Error opening file: " << filename_ << std::endl;
+        return;
+    }
+    
+    read_textual_header(file);
+    read_ebcdic_header(file);
+    read_binary_header(file);
+    read_trace_headers(file);
+    read_data(file);
+
+    file.close();
 }
 
 void SegyFileReader::read_textual_header(std::ifstream& file)
